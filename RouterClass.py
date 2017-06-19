@@ -5,6 +5,8 @@ Created on 19-Jun-2017
 '''
 #PC definition
 class PC:
+    #class variable
+    operatingSystem='Windows 10'
     def __init__(self,_link,_ipaddress,maddr):
         self.link=_link
         self.ipAddress=_ipaddress
@@ -27,6 +29,30 @@ class Switch:
         return self.port
     def set_pclist(self,pcData):
         self.pcList=pcData
+
+
+class Layer3Switch(Switch):
+    def __init__(self, _ipaddress, _vlan, hname, maddr,_link,user):
+        Switch.__init__(self, _ipaddress, _vlan, hname, maddr)
+        self.link=_link
+        self.userName=user
+    def set_pwd(self,pwd):
+        self.password=pwd
+        
+    def get_pwd(self):
+        return self.password
+    def set_PCS(self,pcData):
+        self.pcList=pcData
+    
+    def filter(self):
+        if  not (self.pcList is None):
+            print(self.pcList)
+#            print(self.switchList.pcList)
+            for pc in self.pcList:
+                if(pc.ipAddress=='10.10.9.101'):
+                   print("this PC using OS as %s blocked from routing" %(PC.operatingSystem))
+                else:
+                    print(pc.ipAddress,"\t",PC.operatingSystem)
     
 
 #PC instances
@@ -37,6 +63,7 @@ pc1=PC('up','10.10.9.100','00D0.BD10.697D')
 pc1.set_location('InterCity Home City')
 
 pcList=[pc0,pc1]
+PC.operatingSystem='Windows Server 2016'
 #switch instances
 switch0_2954_20=Switch('10.10.9.2',True,'SwitchLab1',
                        '00D0.BD58.1747')
@@ -58,11 +85,18 @@ class Router:
     def get_pwd(self):
         return self.password
     def set_switches(self,switchData):
-        self.swichList=switchData
+        self.switchList=switchData
     
     def filter(self):
-        print("filtering the IP addresses",self.hostname,
-              self.link)
+        if  not (self.switchList is None):
+            print(self.switchList)
+#            print(self.switchList.pcList)
+            for pc in self.switchList.pcList:
+                if(pc.ipAddress=='10.10.9.101'):
+                   print("this PC using OS as %s blocked from routing" %(PC.operatingSystem))
+                else:
+                    print(pc.ipAddress,"\t",PC.operatingSystem)
+                   
 
       
 #Router Object
@@ -74,6 +108,7 @@ router1841.filter()
 router2811 = Router('remotehost','down','10.10.9.31','user2',
                     False,'0001.634B.1651')
 router2811.set_pwd('anz@123')
+router2811.set_switches(None)
 router2811.filter()
 
 #retrieve password for the device
