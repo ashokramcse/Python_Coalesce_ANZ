@@ -25,6 +25,9 @@ class Switch:
         self.port=_port
     def get_port(self):
         return self.port
+    def set_pclist(self,pcData):
+        self.pcList=pcData
+    
 
 #PC instances
 pc0=PC('up','10.10.9.101','00D0.BD10.5C66')
@@ -33,10 +36,11 @@ pc0.set_location('InterCity Home City')
 pc1=PC('up','10.10.9.100','00D0.BD10.697D')
 pc1.set_location('InterCity Home City')
 
+pcList=[pc0,pc1]
 #switch instances
 switch0_2954_20=Switch('10.10.9.2',True,'SwitchLab1',
                        '00D0.BD58.1747')
-
+switch0_2954_20.set_pclist(pcList)
 
 #Router class definition
 
@@ -53,7 +57,9 @@ class Router:
         
     def get_pwd(self):
         return self.password
-        
+    def set_switches(self,switchData):
+        self.swichList=switchData
+    
     def filter(self):
         print("filtering the IP addresses",self.hostname,
               self.link)
@@ -63,6 +69,7 @@ class Router:
 router1841=Router('localhost','up','10.10.9.1','user1',True,
                   '0001.634A.1601')
 router1841.set_pwd('test@123')
+router1841.set_switches(switch0_2954_20)
 router1841.filter()
 router2811 = Router('remotehost','down','10.10.9.31','user2',
                     False,'0001.634B.1651')
