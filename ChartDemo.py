@@ -1,44 +1,40 @@
 '''
-Created on 15-Feb-2017
+Created on 20-Jun-2017
 
 @author: BALASUBRAMANIAM
 '''
 import os
 from openpyxl import Workbook
 
-from openpyxl.chart import (
-    AreaChart,
+from openpyxl import  load_workbook
+from openpyxl.chart import(AreaChart,
     Reference,
     Series,
-    BarChart3D,
-)
-wb=Workbook()
-ws=wb.active
-rows = [
-    ['TraineeId', 'Test1', 'Test2'],
-    [2324, 40, 30],
-    [345, 90, 25],
-    [4435, 80, 30],
-    [5435, 78, 65],
-    [6345, 90, 55],
-    [7435, 50, 10],
-]
+    BarChart3D)
+wb=load_workbook('G:/Local Disk/Python/ANZ_Day4/LinkData.xlsx', read_only=False,data_only=True)
+sheet=wb.get_sheet_by_name("Sheet1")
+outerList=[]
+for cell in range(1,sheet.max_row):
+    innerList=[]
+    for col in range(3,5):
+#        print(cell,sheet.cell(row=cell,column=col).value)
+        innerList.append(sheet.cell(row=cell,column=col).value)
+    outerList.append(innerList)
 
-for row in rows:
-    ws.append(row)
-    
-chart =  BarChart3D()
-chart.title = "Score Graph"
+print(outerList)
+
+chart = BarChart3D()
+chart.title = "Link Utilization"
 chart.style = 13
-chart.x_axis.title = 'Trainee Id'
-chart.y_axis.title = 'Marks(%)'
-Reference()
-cats = Reference(ws, min_col=1, min_row=1, max_row=7)
-data = Reference(ws, min_col=2, min_row=1, max_col=3, max_row=7)
+chart.x_axis.title = 'Time'
+chart.y_axis.title = 'bandwidth'
+
+cats = Reference(sheet, min_col=3, min_row=1, max_row=7)
+data = Reference(sheet, min_col=4, min_row=1, max_col=4, max_row=7)
 chart.add_data(data, titles_from_data=True)
 chart.set_categories(cats)
 
-ws.add_chart(chart, "F12")
+sheet.add_chart(chart, "G10")
+print(os.getcwd())
+wb.save('G:/Local Disk/Python/ANZ_Day4/LinkData.xlsx')
 
-path=os.getcwd()
-wb.save(path+"/BarChartData.xlsx")
